@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".SettingsActivity">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="323dp"
-        android:text="Регистрация"
+        android:text="Настройки"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,7 +31,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Выберите иконку">
+            android:text="Измени иконку">
         </TextView>
 
         <LinearLayout
@@ -69,58 +67,56 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="110dp"
-        android:hint="Имя пользователя"
+        android:hint="Изменить имя пользователя"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         tools:layout_editor_absoluteX="0dp">
 
     </EditText>
 
-
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/oldPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:hint="Email"
+        android:hint="Старый пароль"
         app:layout_constraintTop_toBottomOf="@+id/username"
-        tools:layout_editor_absoluteX="0dp">
-
-    </EditText>
+        tools:layout_editor_absoluteX="0dp"/>
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/newPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:hint="Пароль"
-        app:layout_constraintTop_toBottomOf="@+id/email"
-        tools:layout_editor_absoluteX="0dp">
+        android:hint="Новый пароль"
+        app:layout_constraintTop_toBottomOf="@+id/oldPassword"
+        tools:layout_editor_absoluteX="0dp"/>
 
-    </EditText>
 
-    <Button
-        android:id="@+id/signUp"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/newPassword"
         android:layout_marginTop="20dp"
-        android:onClick="onSignUp"
-        android:text="Зарегистрироваться"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password">
+        android:gravity="center">
 
-    </Button>
+        <Button
+            android:id="@+id/signUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onSaved"
+            android:text="Сохранить"
+            >
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onHaveAccount"
-        android:layout_marginTop="20dp"
-        android:text="У меня уже есть аккаунт!"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUp">
+        </Button>
 
-    </Button>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onCanceled"
+            android:text="Отмена">
+
+        </Button>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,197 +1,171 @@
 package com.example.mapview;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PointF;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
-import com.mapbox.geojson.Feature;
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.style.layers.FillLayer;
-import com.mapbox.mapboxsdk.style.layers.Layer;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayDeque;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
+public class MainActivity extends AppCompatActivity{
 
-
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, MapboxMap.OnMapClickListener{
-
-    private MapView mapView;
-    private MapboxMap mapboxMap;
-    ArrayDeque<Layer> rooms = new ArrayDeque<>();
-    TextView tv;
+    private FirebaseAuth auth;
+    DatabaseReference db;
+    EditText email, password, username;
+    long lastUserID = 0;
+    boolean uniqUsername;
+    Intent i;
+    ArrayList<String> usernames;
+    ImageView icon1, icon2, icon3;
+    int icon = 1;
+    UserData data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //для использования библиотеки необходимо указывать токен доступа
-        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-
         setContentView(R.layout.activity_main);
 
-        mapView = (MapView) findViewById(R.id.mapView);
-        mapView.getMapAsync(this);
+        auth = FirebaseAuth.getInstance();
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
+        username = findViewById(R.id.username);
+        db = FirebaseDatabase.getInstance().getReference();
+        i = new Intent(MainActivity.this, MapActivity.class);
+        usernames = new ArrayList<>();
+        icon1 = findViewById(R.id.icon1); icon2 = findViewById(R.id.icon2); icon3 = findViewById(R.id.icon3);
+        icon1.setImageResource(R.drawable.icon1); icon2.setImageResource(R.drawable.icon2); icon3.setImageResource(R.drawable.icon3);
+        icon1.setTag(1); icon2.setTag(2); icon3.setTag(3);
 
-        tv = findViewById(R.id.room);
-    }
 
-
-    @Override
-    public void onMapReady(@NonNull final MapboxMap mapboxMap) {
-
-        MainActivity.this.mapboxMap = mapboxMap;
-        //подгружаем созданный стиль из студии MapBox
-        mapboxMap.setStyle(new Style.Builder().fromUri("mapbox://styles/nodreamistoobig/ckiynged16wbp19qk3otw32pz"), new Style.OnStyleLoaded() {
-            GeoJsonSource source_401, source_403;
-            @Override
-            public void onStyleLoaded(@NonNull Style style) {
-                try {
-                    //подгружаем данные по отдельным кабинетам (тип: полигон)
-                    source_401 = new GeoJsonSource("source_401", new URI("asset://401.geojson"));
-                    source_403 = new GeoJsonSource("source_403", new URI("asset://403.geojson"));
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-
-                //добавляем в стиль полученные данные по кабинетам
-                style.addSource(source_403);
-                style.addSource(source_401);
-
-                //добавляем в стиль прозрачные слои для кабинетов
-                style.addLayer(new FillLayer("room_401", "source_401").withProperties(PropertyFactory.fillColor(Color.BLUE),fillOpacity(0.0f)));
-                style.addLayer(new FillLayer("room_403", "source_403").withProperties(PropertyFactory.fillColor(Color.BLUE),fillOpacity(0.0f)));
-                //назначаем карте слушатель
-                mapboxMap.addOnMapClickListener(MainActivity.this);
-            }
-
-        });
-    }
-
-    @Override
-    public boolean onMapClick(@NonNull final LatLng point) {
-        mapboxMap.getStyle(new Style.OnStyleLoaded() {
-            @Override
-            public void onStyleLoaded(@NonNull Style style) {
-
-                //после клика получаем позицию, переводим полученные долготу и широту в положение на экране
-                final PointF finalPoint = mapboxMap.getProjection().toScreenLocation(point);
-                //получаем данные из слоя, если точка принадлежит ему
-                ArrayList<List<Feature>> features = new ArrayList<>();
-                List<Feature> features_401 = mapboxMap.queryRenderedFeatures(finalPoint, "room_401");
-                List<Feature> features_403 = mapboxMap.queryRenderedFeatures(finalPoint, "room_403");
-                features.add(features_401);
-                features.add(features_403);
-
-                boolean onRoomClick = false;
-
-                for (List<Feature> list : features)
-                    if (list.size()>0){
-                        onRoomClick = true;
-                        break;
-                    }
-
-                //если данные не пусты, т.е. если клик был совершен на слое
-                if (onRoomClick){
-                    if (features_401.size() > 0){
-                        rooms.add(style.getLayer("room_401"));
-                        tv.setText("401");
-                    }
-                    else{
-                        rooms.add(style.getLayer("room_403"));
-                        tv.setText("403");
-                    }
-                    //выделяем слой с кабинетом и делаем надпись
-                    Layer room = rooms.getLast();
-                    room.setProperties(PropertyFactory.fillOpacity(0.5f));
-                    //заупскаем asuncTask на 3 секунды, после которых надпись и подсветка исчезнут
-                    Task t = new Task();
-                    t.execute();
-                }
-            }
-        });
-        return true;
-    }
-
-    //необходимые методы
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mapView.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mapView.onStop();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    public class Task extends AsyncTask<Void,Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return null;
+        if(auth.getCurrentUser() != null){
+            startActivity(i);
         }
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Layer room = rooms.getFirst();
-            room.setProperties(PropertyFactory.fillOpacity(0.0f));
-            rooms.removeFirst();
-            tv.setText("");
+        ValueEventListener dbListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                lastUserID = (long) dataSnapshot.child("system").child("lastUserID").getValue();
+                for (DataSnapshot user: dataSnapshot.child("users").getChildren()){
+                    usernames.add(user.getValue().toString());
+                }
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        };
+        db.addValueEventListener(dbListener);
+    }
+
+    public void onSignUp(View v){
+        uniqUsername = true;
+        createAccount(email.getText().toString(), password.getText().toString(), username.getText().toString());
+    }
+
+    public void onHaveAccount(View v){
+        Intent i = new Intent(MainActivity.this, SignInActivity.class);
+        startActivity(i);
+    }
+
+    private void createAccount(String email, String password, final String name) {
+        Log.d("CREATE", email);
+        if (!validateForm(email, password, name)) {
+            return;
+        }
+
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("CREATED", "success");
+                            Toast.makeText(MainActivity.this, "Успешная авторизация!",Toast.LENGTH_SHORT).show();
+
+                            final FirebaseUser user = auth.getCurrentUser();
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(name).build();
+                            if (user != null){
+                                user.updateProfile(profileUpdates);
+                            }
+
+                            String user_id = String.valueOf(lastUserID+1);
+
+                            db.child("users").child(user_id).child("name").setValue(name);
+                            db.child("users").child(user_id).child("icon").setValue(icon);
+                            db.child("system").child("lastUserID").setValue(lastUserID+1);
+
+                            data = new UserData((int) (lastUserID+1), name, icon);
+                            i.putExtra(UserData.class.getSimpleName(), data);
+                            startActivity(i);
+                        } else {
+                            Log.w("TAG", "failure", task.getException());
+                            Toast.makeText(MainActivity.this, task.getException().getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private boolean validateForm(String email, String password, String username) {
+        boolean valid = true;
+
+        for (String name: usernames)
+            if (name.equals(username)){
+                uniqUsername = false;
+                break;
+            }
+
+        if(!uniqUsername){
+            valid = false;
+            Toast.makeText(MainActivity.this, "Неуникальное имя пользователя!", Toast.LENGTH_SHORT).show();
+        }
+
+        if (TextUtils.isEmpty(email)) {
+            valid = false;
+            Toast.makeText(MainActivity.this, "Введите почту.", Toast.LENGTH_SHORT).show();
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            valid = false;
+            Toast.makeText(MainActivity.this, "Введите пароль.", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            if (password.length()<6){
+                valid = false;
+                Toast.makeText(MainActivity.this, "Пароль должен состоять минимум из 6 символов.", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        return valid;
+    }
+
+    public void onIconClick(View v){
+        int icon_id = (int)v.getTag();
+
+        if ((int)v.getTag() < 4){
+            v.setBackgroundColor(Color.YELLOW);
+            v.setTag((int)v.getTag()*2);
+            icon = icon_id;
+        }
+        else{
+            v.setBackgroundColor(Color.TRANSPARENT);
+            v.setTag((int)v.getTag()/2);
+            icon = 1;
         }
     }
 }

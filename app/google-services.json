@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "51423841422",
+    "project_id": "we-learn---we-know",
+    "storage_bucket": "we-learn---we-know.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51423841422:android:0cb428c28f83276b0dcddf",
+        "android_client_info": {
+          "package_name": "com.example.library"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51423841422-s1okchbjhgs4nn23794cc4b8qn404fij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApa41oeawOTzvVeez0ufEuDWBr1IlbjGw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51423841422-s1okchbjhgs4nn23794cc4b8qn404fij.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
