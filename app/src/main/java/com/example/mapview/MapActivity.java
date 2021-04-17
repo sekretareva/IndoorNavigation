@@ -9,16 +9,13 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -28,21 +25,31 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.Region;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, MapboxMap.OnMapClickListener{
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, MapboxMap.OnMapClickListener {
 
     private MapView mapView;
     private MapboxMap mapboxMap;
+    MapData mapData;
     ArrayDeque<Layer> rooms = new ArrayDeque<>();
     TextView tv;
     ImageView icon;
@@ -54,6 +61,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         //для использования библиотеки необходимо указывать токен доступа
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_map);
+        new BeaconData(this);
 
         mapView = findViewById(R.id.mapView);
         mapView.getMapAsync(this);
@@ -114,29 +122,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         MapActivity.this.mapboxMap = mapboxMap;
         //подгружаем созданный стиль из студии MapBox
-        mapboxMap.setStyle(new Style.Builder().fromUri("mapbox://styles/nodreamistoobig/ckiynged16wbp19qk3otw32pz"), new Style.OnStyleLoaded() {
-            GeoJsonSource source_401, source_403;
+        mapboxMap.setStyle(Style.OUTDOORS, new Style.OnStyleLoaded() {
+
             @Override
             public void onStyleLoaded(@NonNull Style style) {
-                try {
-                    //подгружаем данные по отдельным кабинетам (тип: полигон)
-                    source_401 = new GeoJsonSource("source_401", new URI("asset://401.geojson"));
-                    source_403 = new GeoJsonSource("source_403", new URI("asset://403.geojson"));
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-
-                //добавляем в стиль полученные данные по кабинетам
-                style.addSource(source_403);
-                style.addSource(source_401);
-
-                //добавляем в стиль прозрачные слои для кабинетов
-                style.addLayer(new FillLayer("room_401", "source_401").withProperties(PropertyFactory.fillColor(Color.BLUE),fillOpacity(0.0f)));
-                style.addLayer(new FillLayer("room_403", "source_403").withProperties(PropertyFactory.fillColor(Color.BLUE),fillOpacity(0.0f)));
+                mapData = new MapData(style);
                 //назначаем карте слушатель
                 mapboxMap.addOnMapClickListener(MapActivity.this);
             }
-
         });
     }
 
@@ -148,30 +141,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 //после клика получаем позицию, переводим полученные долготу и широту в положение на экране
                 final PointF finalPoint = mapboxMap.getProjection().toScreenLocation(point);
                 //получаем данные из слоя, если точка принадлежит ему
-                ArrayList<List<Feature>> features = new ArrayList<>();
-                List<Feature> features_401 = mapboxMap.queryRenderedFeatures(finalPoint, "room_401");
-                List<Feature> features_403 = mapboxMap.queryRenderedFeatures(finalPoint, "room_403");
-                features.add(features_401);
-                features.add(features_403);
-
-                boolean onRoomClick = false;
-
-                for (List<Feature> list : features)
-                    if (list.size()>0){
-                        onRoomClick = true;
+                mapData.getFeatures(mapboxMap, finalPoint);
+                int onRoomClick = -1;
+                for (int i=0;i< mapData.features.size();i++){
+                    if (mapData.features.get(i).size()>0){
+                        onRoomClick = i;
                         break;
                     }
+                }
 
                 //если данные не пусты, т.е. если клик был совершен на слое
-                if (onRoomClick){
-                    if (features_401.size() > 0){
-                        rooms.add(style.getLayer("room_401"));
-                        tv.setText("401");
-                    }
-                    else{
-                        rooms.add(style.getLayer("room_403"));
-                        tv.setText("403");
-                    }
+                if (onRoomClick>=0){
+                    rooms.add(style.getLayer(mapData.roomsNames[onRoomClick]));
+                    tv.setText(mapData.roomsNames[onRoomClick]);
+
                     //выделяем слой с кабинетом и делаем надпись
                     Layer room = rooms.getLast();
                     room.setProperties(PropertyFactory.fillOpacity(0.5f));

@@ -38,4 +38,6 @@ dependencies {
 
     implementation ('com.mapbox.mapboxsdk:mapbox-android-sdk:8.1.0')
     implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:5.6.0'
+
+    implementation 'org.altbeacon:android-beacon-library:2+'
 }

@@ -30,6 +30,7 @@ public class MessagesActivity extends AppCompatActivity {
     ListView listView;
     int user_id;
     long lastMesID;
+    String chat_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class MessagesActivity extends AppCompatActivity {
         DatabaseReference myRef = database.getReference("chats");
 
         Bundle arguments = getIntent().getExtras();
-        final String chat_id = arguments.get("chat_id").toString();
+        chat_id = arguments.get("chat_id").toString();
         user_id = (int)arguments.get("user_id");
 
         ValueEventListener msgListener = new ValueEventListener() {
@@ -79,29 +80,25 @@ public class MessagesActivity extends AppCompatActivity {
 
         };
         myRef.addValueEventListener(msgListener);
+    }
 
-        Button b = findViewById(R.id.send);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                long id = lastMesID + 1;
-                DatabaseReference msg = FirebaseDatabase.getInstance().getReference("chats").child(chat_id).child("messages").child(String.valueOf(id));
-                EditText sendMsg = findViewById(R.id.sendMsg);
-                String sendMsgText = sendMsg.getText().toString();
+    public void onSend(View v){
+        long id = lastMesID + 1;
+        DatabaseReference msg = FirebaseDatabase.getInstance().getReference("chats").child(chat_id).child("messages").child(String.valueOf(id));
+        EditText sendMsg = findViewById(R.id.sendMsg);
+        String sendMsgText = sendMsg.getText().toString();
 
-                if (!sendMsgText.isEmpty()){
-                    Date curDate = new Date();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("H:m dd MMM yyyy", new Locale("ru"));
+        if (!sendMsgText.isEmpty()){
+            Date curDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("H:m dd MMM yyyy", new Locale("ru"));
 
-                    msg.child("sender").setValue(user_id);
-                    msg.child("datetime").setValue(dateFormat.format(curDate));
-                    msg.child("text").setValue(sendMsgText);
+            msg.child("sender").setValue(user_id);
+            msg.child("datetime").setValue(dateFormat.format(curDate));
+            msg.child("text").setValue(sendMsgText);
 
-                    sendMsg.setText("");
+            sendMsg.setText("");
 
-                    FirebaseDatabase.getInstance().getReference("chats").child(chat_id).child("lastMesID").setValue(id);
-                }
-            }
-        });
+            FirebaseDatabase.getInstance().getReference("chats").child(chat_id).child("lastMesID").setValue(id);
+        }
     }
 }

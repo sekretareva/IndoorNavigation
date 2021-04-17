@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity{
         icon1.setImageResource(R.drawable.icon1); icon2.setImageResource(R.drawable.icon2); icon3.setImageResource(R.drawable.icon3);
         icon1.setTag(1); icon2.setTag(2); icon3.setTag(3);
 
-
         if(auth.getCurrentUser() != null){
             startActivity(i);
         }
