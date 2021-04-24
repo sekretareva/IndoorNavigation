@@ -12,8 +12,10 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.mapbox.geojson.Feature;
@@ -54,6 +56,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     TextView tv;
     ImageView icon;
     UserData data;
+    BeaconData beaconData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         //для использования библиотеки необходимо указывать токен доступа
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_map);
-        new BeaconData(this);
 
         mapView = findViewById(R.id.mapView);
         mapView.getMapAsync(this);
@@ -126,15 +128,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             @Override
             public void onStyleLoaded(@NonNull Style style) {
-                mapData = new MapData(style);
+                mapData = new MapData(style, MapActivity.this);
                 //назначаем карте слушатель
                 mapboxMap.addOnMapClickListener(MapActivity.this);
+               beaconData = new BeaconData(mapboxMap, MapActivity.this, mapData);
             }
         });
     }
 
     @Override
     public boolean onMapClick(@NonNull final LatLng point) {
+        mapData.setLocation(beaconData.user_x, beaconData.user_y);
         mapboxMap.getStyle(new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {

@@ -1,14 +1,22 @@
 package com.example.mapview;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.util.Log;
 
 import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Point;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.net.URI;
@@ -16,18 +24,23 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
 
 public class MapData {
     Style style;
     ArrayList<List<Feature>> features;
     MapboxMap mapboxMap;
+    Feature userLocationPoint;
+    GeoJsonSource userLocation;
     //GeoJsonSource source_401, source_403, library, mainWalls, walls, stairs;
     ArrayList<GeoJsonSource> sources = new ArrayList<>();
     String[] sourceNames = {"lib", "mainWalls", "walls", "stairs", "401", "403"};
     String[] roomsNames = {"401", "403"};
 
-    MapData (Style style){
+    MapData (Style style, Context context){
         this.style = style;
 
         try {
@@ -49,6 +62,16 @@ public class MapData {
         style.addLayer(new FillLayer("401", "401").withProperties(PropertyFactory.fillColor(Color.BLUE),fillOpacity(0.0f)));
         style.addLayer(new FillLayer("403", "403").withProperties(PropertyFactory.fillColor(Color.BLUE),fillOpacity(0.0f)));
 
+        List<Feature> markerCoordinates = new ArrayList<>();
+        markerCoordinates.add(Feature.fromGeometry(Point.fromLngLat(104.26015672462, 52.250868099897)));
+        markerCoordinates.add(Feature.fromGeometry(Point.fromLngLat( 104.260241577899, 52.250755196808)));
+        markerCoordinates.add(Feature.fromGeometry(Point.fromLngLat(104.260276132228,	52.2508298507214)));
+        markerCoordinates.add(Feature.fromGeometry(Point.fromLngLat( 104.260522353784,52.2508988695676)));
+
+        style.addImage("my-marker-image", BitmapFactory.decodeResource(context.getResources(), R.drawable.point));
+        style.addSource(new GeoJsonSource("marker-source",FeatureCollection.fromFeatures(markerCoordinates)));
+        style.addLayer( new SymbolLayer("marker-layer", "marker-source")
+                .withProperties(iconImage("my-marker-image")));
     }
 
     public void getFeatures(MapboxMap mapboxMap, PointF finalPoint){
@@ -57,5 +80,16 @@ public class MapData {
         for (String room: roomsNames){
             features.add(this.mapboxMap.queryRenderedFeatures(finalPoint,room));
         }
+    }
+
+    public void setLocation(double longitude, double latitude){
+        style.removeLayer("user-location");
+        style.removeSource("user-location");
+
+        userLocationPoint = Feature.fromGeometry(Point.fromLngLat(longitude,latitude));
+        userLocation = new GeoJsonSource("user-location", userLocationPoint);
+        style.addSource(userLocation);
+        style.addLayer( new SymbolLayer("user-location", "user-location")
+                .withProperties(iconImage("my-marker-image")));
     }
 }
