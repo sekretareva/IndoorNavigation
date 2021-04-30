@@ -72,8 +72,12 @@ public class ChatsActivity extends AppCompatActivity {
                         long lastMesID = 0;
                         if (chat.hasChild("lastMesID"))
                              lastMesID = (long) chat.child("lastMesID").getValue();
-                        DataSnapshot lm = chat.child("messages").child(String.valueOf(lastMesID));
-                        Message lastMsg = new Message((Long)lm.child("sender").getValue(), (String)lm.child("datetime").getValue(), (String)lm.child("text").getValue());
+                        DataSnapshot lm = chat.child("messages")
+                                .child(String.valueOf(lastMesID));
+                        Message lastMsg = new Message(
+                                (Long)lm.child("sender").getValue(),
+                                (String)lm.child("datetime").getValue(),
+                                (String)lm.child("text").getValue());
                         messages.add(lastMsg);
                         Chat ch = new Chat(chat.getKey(), chatUsers, messages);
                         chats.add(ch);

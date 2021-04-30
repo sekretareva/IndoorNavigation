@@ -78,7 +78,7 @@ public class ChatsListAdapter extends BaseAdapter {
             });
         }
         else
-            icon.setImageResource(R.drawable.icon1);
+            icon.setImageResource(R.drawable.group);
 
         //username.setText(names);
         if (chat.messages.size()>0)

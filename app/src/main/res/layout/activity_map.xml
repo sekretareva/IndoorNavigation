@@ -26,24 +26,30 @@
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/room"/>
 
-    <Button
-        android:id="@+id/chatButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="Chats"
-        android:onClick="onChat">
-    </Button>
-
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chatButton"
+        app:layout_constraintTop_toTopOf="parent"
         android:onClick="onIconClick">
 
     </ImageView>
+
+    <ImageButton
+        android:id="@+id/chatButton"
+        style="@android:style/Holo.ButtonBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:onClick="onChat"
+        android:src="@drawable/chats"
+        app:layout_constraintRight_toLeftOf="@id/icon"
+        app:layout_constraintTop_toTopOf="parent"></ImageButton>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

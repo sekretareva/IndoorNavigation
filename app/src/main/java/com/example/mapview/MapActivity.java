@@ -115,9 +115,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void onChat(View v){
-        Intent i = new Intent(MapActivity.this, ChatsActivity.class);
-        i.putExtra(UserData.class.getSimpleName(), data);
-        startActivity(i);
+        if (FirebaseAuth.getInstance().getCurrentUser()!=null){
+            Intent i = new Intent(MapActivity.this, ChatsActivity.class);
+            i.putExtra(UserData.class.getSimpleName(), data);
+            startActivity(i);
+        }
     }
 
     @Override

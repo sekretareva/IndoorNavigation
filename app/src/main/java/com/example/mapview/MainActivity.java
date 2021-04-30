@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity{
             public void onDataChange(DataSnapshot dataSnapshot) {
                 lastUserID = (long) dataSnapshot.child("system").child("lastUserID").getValue();
                 for (DataSnapshot user: dataSnapshot.child("users").getChildren()){
-                    usernames.add(user.getValue().toString());
+                    usernames.add(user.child("name").getValue().toString());
                 }
 
             }
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void onSignUp(View v){
         uniqUsername = true;
-        createAccount(email.getText().toString(), password.getText().toString(), username.getText().toString());
+        createAccount(email.getText().toString().trim(), password.getText().toString().trim(), username.getText().toString().trim());
     }
 
     public void onHaveAccount(View v){
@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity{
     private void createAccount(String email, String password, final String name) {
         Log.d("CREATE", email);
         if (!validateForm(email, password, name)) {
+            Log.d("FAIL valid", email);
             return;
         }
 

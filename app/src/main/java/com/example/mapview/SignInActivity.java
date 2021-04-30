@@ -35,11 +35,11 @@ public class SignInActivity extends AppCompatActivity {
 
     public void onSignIn(View v){
         Log.d("TAG", "signIn:" + email);
-        if (!validateForm(email.getText().toString(), password.getText().toString())) {
+        if (!validateForm(email.getText().toString().trim(), password.getText().toString().trim())) {
             return;
         }
 
-        mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+        mAuth.signInWithEmailAndPassword(email.getText().toString().trim(), password.getText().toString().trim())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

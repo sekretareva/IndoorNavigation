@@ -123,8 +123,10 @@ public class SettingsActivity extends AppCompatActivity{
                 q.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot s: snapshot.getChildren())
+                        for (DataSnapshot s: snapshot.getChildren()){
                             updateUserName(s.getKey());
+                            Log.d("UPDATE", "update username");
+                        }
                     }
 
                     @Override
@@ -137,6 +139,7 @@ public class SettingsActivity extends AppCompatActivity{
 
         if (icon!=0){
             data.updateIcon(icon);
+            icon = 0;
         }
 
         if (valid && !newPassword.isEmpty() ){

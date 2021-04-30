@@ -1,6 +1,7 @@
 package com.example.mapview;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,9 @@ public class UsersListAdapter extends BaseAdapter {
                     chatUsers.add(user);
                 else
                     chatUsers.remove(user);
+
+                for (int i = 0; i<chatUsers.size();i++)
+                    Log.d("NEWCHAT", chatUsers.get(i).getId()+"");
             }
         });
 

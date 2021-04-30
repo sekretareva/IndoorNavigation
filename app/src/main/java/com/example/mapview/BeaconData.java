@@ -101,7 +101,7 @@ public class BeaconData implements BeaconConsumer {
     }
 
     public void getCoordinates(ArrayList<Beacon> beacons){
-        Log.i("BEACONS", "There are " + beacons.size() + " beacons");
+        //Log.i("BEACONS", "There are " + beacons.size() + " beacons");
         if (beacons.size()<3)
             return;
         if (beacons.size() > 3){
@@ -115,7 +115,14 @@ public class BeaconData implements BeaconConsumer {
             beaconDist.addAll(beaconsDist.get(beacons.get(i).getBluetoothName()));
             Collections.sort(beaconDist);
             R[i] = beaconDist.get(beaconDist.size()/2);
-            //Log.d("DIST", beacons.get(i).getBluetoothName() + " "+ beaconDist.get(beaconDist.size()/2));
+            //Log.d("DIST", beacons.get(i).getBluetoothName() + " "+R[i]);
+
+            /*if (beacons.get(i).getBluetoothName().equals(beaconsNames[1]))
+                Log.d("D0F9", beacons.get(i).getDistance()+"");
+            if (beacons.get(i).getBluetoothName().equals(beaconsNames[0]))
+                Log.d("49D7", beacons.get(i).getDistance()+"");
+            if (beacons.get(i).getBluetoothName().equals(beaconsNames[2]))
+                Log.d("79B8", beacons.get(i).getDistance()+"");*/
         }
 
         Coordinates[] dif = new Coordinates[beacons.size()];
@@ -128,8 +135,7 @@ public class BeaconData implements BeaconConsumer {
         }
 
         double K1, K2, K3;
-        K1 = dif[0].longitude*dif[0].longitude - dif[2].longitude*dif[2].longitude
-                + dif[0].latitude*dif[0].latitude - dif[2].latitude*dif[2].latitude - R[1]*R[1]+R[2]*R[2];
+        K1 = dif[0].longitude*dif[0].longitude - dif[2].longitude*dif[2].longitude+ dif[0].latitude*dif[0].latitude - dif[2].latitude*dif[2].latitude - R[1]*R[1]+R[2]*R[2];
         K2 = K1/(2*dif[1].longitude);
         K3 = dif[1].latitude/dif[1].longitude;
 
@@ -143,11 +149,11 @@ public class BeaconData implements BeaconConsumer {
             x12 = K2 - K3*y12;
             x11 = beaconsCoord.get(beacons.get(0).getBluetoothName()).longitude + x11/lenLongitude;
             y11 = beaconsCoord.get(beacons.get(0).getBluetoothName()).latitude + y11/lenLatitude;
-            Log.d("BEACONS",beacons.get(0).getBluetoothName() + " x = " + x11 + " y = " + y11);
+            //Log.d("BEACONS",beacons.get(0).getBluetoothName() + " x = " + x11 + " y = " + y11);
 
             x12 = beaconsCoord.get(beacons.get(0).getBluetoothName()).longitude + x12/lenLongitude;
             y12 = beaconsCoord.get(beacons.get(0).getBluetoothName()).latitude + y12/lenLatitude;
-            Log.d("BEACONS",beacons.get(0).getBluetoothName() + " x = " + x12 + " y = " + y12);
+            //Log.d("BEACONS",beacons.get(0).getBluetoothName() + " x = " + x12 + " y = " + y12);
 
             x21 = x11 + dif[0].longitude;
             x22 = x12 + dif[0].longitude;
@@ -155,12 +161,12 @@ public class BeaconData implements BeaconConsumer {
             y22 = y12 + dif[0].latitude;
 
             if (Math.abs(x21*x21 + y21*y21 - R[1]*R[1]) < Math.abs(x22*x22 + y22*y22 - R[1]*R[1])){
-                Log.d("COORDS_1",beacons.get(0).getBluetoothName() + " x = " + x11 + " y = " + y11);
+                //Log.d("COORDS_1",beacons.get(0).getBluetoothName() + " x = " + x11 + " y = " + y11);
                 user_x = x11;
                 user_y = y11;
             }
             else {
-                Log.d("COORDS_2",beacons.get(0).getBluetoothName() + " x = " + x12 + " y = " + y12);
+                //Log.d("COORDS_2",beacons.get(0).getBluetoothName() + " x = " + x12 + " y = " + y12);
                 user_x = x12;
                 user_y = y12;
             }
