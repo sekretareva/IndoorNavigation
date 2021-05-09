@@ -7,16 +7,24 @@
     tools:context=".MessagesActivity"
     android:orientation="vertical">
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/home"
+        style="@android:style/Holo.ButtonBar"
+        android:layout_gravity="end"
+        android:layout_weight="0.1"/>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/msgsList"
-        android:layout_weight="9"/>
+        android:layout_weight="8"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         android:orientation="horizontal">
 
         <EditText

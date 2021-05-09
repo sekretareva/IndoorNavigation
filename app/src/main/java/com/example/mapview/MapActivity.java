@@ -5,47 +5,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.RemoteException;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
-import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
-import org.altbeacon.beacon.Beacon;
-import org.altbeacon.beacon.BeaconConsumer;
-import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.RangeNotifier;
-import org.altbeacon.beacon.Region;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, MapboxMap.OnMapClickListener {
 
@@ -96,7 +74,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Intent i = new Intent(MapActivity.this, SettingsActivity.class);
                 i.putExtra(UserData.class.getSimpleName(), data);
-                Log.d("DATA", data.getName() + data.getId() + data.getIcon()+"");
                 startActivity(i);
             }
         });
@@ -133,7 +110,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 mapData = new MapData(style, MapActivity.this);
                 //назначаем карте слушатель
                 mapboxMap.addOnMapClickListener(MapActivity.this);
-               beaconData = new BeaconData(mapboxMap, MapActivity.this, mapData);
+                beaconData = new BeaconData(mapboxMap, MapActivity.this, mapData);
             }
         });
     }

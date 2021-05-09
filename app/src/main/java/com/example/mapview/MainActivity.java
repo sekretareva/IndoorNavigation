@@ -1,8 +1,9 @@
 package com.example.mapview;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
-import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,10 +35,14 @@ public class MainActivity extends AppCompatActivity{
     boolean uniqUsername;
     Intent i;
     ArrayList<String> usernames;
-    ImageView icon1, icon2, icon3;
+    ImageView[] icons;
+    String[] iconsnames = {"icon1", "icon2", "icon3"};
+    int[] iconsid = {R.id.icon1, R.id.icon2, R.id.icon3};
+    int[] iconsres = {R.drawable.icon1, R.drawable.icon2, R.drawable.icon3};
     int icon = 1;
     UserData data;
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +55,13 @@ public class MainActivity extends AppCompatActivity{
         db = FirebaseDatabase.getInstance().getReference();
         i = new Intent(MainActivity.this, MapActivity.class);
         usernames = new ArrayList<>();
-        icon1 = findViewById(R.id.icon1); icon2 = findViewById(R.id.icon2); icon3 = findViewById(R.id.icon3);
-        icon1.setImageResource(R.drawable.icon1); icon2.setImageResource(R.drawable.icon2); icon3.setImageResource(R.drawable.icon3);
-        icon1.setTag(1); icon2.setTag(2); icon3.setTag(3);
+        icons = new ImageView[3];
+        for (int i=0; i<icons.length;i++){
+            icons[i] = findViewById(iconsid[i]);
+            icons[i].setImageResource(iconsres[i]);
+            icons[i].setTransitionAlpha(0.7f);
+            icons[i].setTag(i+1);
+        }
 
         if(auth.getCurrentUser() != null){
             startActivity(i);
@@ -154,17 +163,22 @@ public class MainActivity extends AppCompatActivity{
         return valid;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void onIconClick(View v){
         int icon_id = (int)v.getTag();
 
         if ((int)v.getTag() < 4){
-            v.setBackgroundColor(Color.YELLOW);
-            v.setTag((int)v.getTag()*2);
+            for (int i=0; i<icons.length;i++){
+                icons[i].setTransitionAlpha(0.7f);
+                icons[i].setTag(i+1);
+            }
+            v.setTransitionAlpha(1f);
+            v.setTag((int)v.getTag()+3);
             icon = icon_id;
         }
         else{
-            v.setBackgroundColor(Color.TRANSPARENT);
-            v.setTag((int)v.getTag()/2);
+            v.setTransitionAlpha(0.7f);
+            v.setTag((int)v.getTag()-3);
             icon = 1;
         }
     }

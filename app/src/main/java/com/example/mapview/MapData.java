@@ -1,16 +1,13 @@
 package com.example.mapview;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.util.Log;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
@@ -24,10 +21,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
 
 public class MapData {
     Style style;
@@ -35,7 +30,6 @@ public class MapData {
     MapboxMap mapboxMap;
     Feature userLocationPoint;
     GeoJsonSource userLocation;
-    //GeoJsonSource source_401, source_403, library, mainWalls, walls, stairs;
     ArrayList<GeoJsonSource> sources = new ArrayList<>();
     String[] sourceNames = {"lib", "mainWalls", "walls", "stairs", "401", "403"};
     String[] roomsNames = {"401", "403"};

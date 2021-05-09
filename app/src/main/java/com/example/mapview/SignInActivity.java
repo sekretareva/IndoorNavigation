@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,7 +14,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -34,7 +32,6 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     public void onSignIn(View v){
-        Log.d("TAG", "signIn:" + email);
         if (!validateForm(email.getText().toString().trim(), password.getText().toString().trim())) {
             return;
         }
@@ -44,11 +41,9 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d("TAG", "signInWithEmail:success");
                             Toast.makeText(SignInActivity.this, "Вход выполнен успешно.",Toast.LENGTH_SHORT).show();
                             startActivity(i);
                         } else {
-                            Log.w("TAG", "signInWithEmail:failure", task.getException());
                             Toast.makeText(SignInActivity.this, "Неверный пароль или email.",Toast.LENGTH_SHORT).show();
                         }
                     }

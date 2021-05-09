@@ -2,7 +2,6 @@ package com.example.mapview;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +79,6 @@ public class ChatsListAdapter extends BaseAdapter {
         else
             icon.setImageResource(R.drawable.group);
 
-        //username.setText(names);
         if (chat.messages.size()>0)
             msgTime.setText(chat.messages.get(chat.messages.size()-1).datetime);
 

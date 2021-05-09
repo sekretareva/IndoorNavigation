@@ -3,7 +3,6 @@ package com.example.mapview;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -15,6 +14,7 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
+import org.altbeacon.beacon.service.ArmaRssiFilter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,9 +37,10 @@ public class BeaconData implements BeaconConsumer {
     BeaconData(MapboxMap mapboxMap, Context context, MapData mapData)  {
         this.mapboxMap = mapboxMap;
         this.mapData = mapData;
-        beaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(context);
+        beaconManager = BeaconManager.getInstanceForApplication(context);
         beaconManager.getBeaconParsers().clear();
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        beaconManager.setRssiFilterImplClass(ArmaRssiFilter.class);
         beaconManager.bind(this);
 
         Coordinates c36 = new Coordinates(104.26015672462, 52.250868099897);
@@ -50,18 +51,6 @@ public class BeaconData implements BeaconConsumer {
         beaconsCoord.put("abeacon_D0F9", c34);
         beaconsCoord.put("abeacon_79B8", c22);
         beaconsCoord.put("abeacon_8259", c23);
-
-        /*File file = new File("C:/Users/user/Android/MapView/beaconsCoordinates.txt");
-        Scanner sc = null;
-        try {
-            sc = new Scanner(file);
-            double x = sc.nextDouble();
-            double y = sc.nextDouble();
-            Log.i("FILE", x+ " " + y);
-            beaconsCoord.add(new Coordinates(x,y));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }*/
     }
 
     @Override
@@ -101,7 +90,7 @@ public class BeaconData implements BeaconConsumer {
     }
 
     public void getCoordinates(ArrayList<Beacon> beacons){
-        //Log.i("BEACONS", "There are " + beacons.size() + " beacons");
+        Log.i("BEACONS", "There are " + beacons.size() + " beacons");
         if (beacons.size()<3)
             return;
         if (beacons.size() > 3){
@@ -115,14 +104,6 @@ public class BeaconData implements BeaconConsumer {
             beaconDist.addAll(beaconsDist.get(beacons.get(i).getBluetoothName()));
             Collections.sort(beaconDist);
             R[i] = beaconDist.get(beaconDist.size()/2);
-            //Log.d("DIST", beacons.get(i).getBluetoothName() + " "+R[i]);
-
-            /*if (beacons.get(i).getBluetoothName().equals(beaconsNames[1]))
-                Log.d("D0F9", beacons.get(i).getDistance()+"");
-            if (beacons.get(i).getBluetoothName().equals(beaconsNames[0]))
-                Log.d("49D7", beacons.get(i).getDistance()+"");
-            if (beacons.get(i).getBluetoothName().equals(beaconsNames[2]))
-                Log.d("79B8", beacons.get(i).getDistance()+"");*/
         }
 
         Coordinates[] dif = new Coordinates[beacons.size()];
@@ -161,12 +142,10 @@ public class BeaconData implements BeaconConsumer {
             y22 = y12 + dif[0].latitude;
 
             if (Math.abs(x21*x21 + y21*y21 - R[1]*R[1]) < Math.abs(x22*x22 + y22*y22 - R[1]*R[1])){
-                //Log.d("COORDS_1",beacons.get(0).getBluetoothName() + " x = " + x11 + " y = " + y11);
                 user_x = x11;
                 user_y = y11;
             }
             else {
-                //Log.d("COORDS_2",beacons.get(0).getBluetoothName() + " x = " + x12 + " y = " + y12);
                 user_x = x12;
                 user_y = y12;
             }

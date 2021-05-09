@@ -1,7 +1,6 @@
 package com.example.mapview;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,7 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 public class MessagesListAdapter extends BaseAdapter {
     Context cntx;
@@ -65,7 +62,6 @@ public class MessagesListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         Message msg = messages.get(position);
 
-        Log.d("DATA", msg.sender + " " + user_id);
         if (String.valueOf(msg.sender).equals(user_id))
             convertView = LayoutInflater.from(cntx).inflate(R.layout.my_msgitem, parent, false);
         else{
@@ -75,7 +71,6 @@ public class MessagesListAdapter extends BaseAdapter {
             data.setIcon(msg.sender, senderIcon);
             TextView senderName = convertView.findViewById(R.id.senderName);
             data.setName(msg.sender, senderName);
-            //senderName.setText(data.getName());
         }
 
         TextView msgTime = convertView.findViewById(R.id.msgTime);

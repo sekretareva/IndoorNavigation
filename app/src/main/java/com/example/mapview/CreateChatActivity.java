@@ -6,12 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,7 +70,7 @@ public class CreateChatActivity extends AppCompatActivity {
                 String query = searchUser.getText().toString();
                 ArrayList<UserData> searchResult = new ArrayList<>();
                 for (int i = 0; i < users_to_chat.size(); i++)
-                    if (users_to_chat.get(i).getName().toLowerCase().contains(query))
+                    if (users_to_chat.get(i).getName().toLowerCase().contains(query.toLowerCase()))
                         searchResult.add(users_to_chat.get(i));
 
                 adapter = new UsersListAdapter(CreateChatActivity.this, searchResult, adapter.chatUsers);
@@ -85,22 +84,8 @@ public class CreateChatActivity extends AppCompatActivity {
         chatUsers.add(data);
         long new_chat_id = lastChatID+1;
 
-        /*ValueEventListener chatToUserListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot u: snapshot.getChildren())
-                    Log.d("QUERY", String.valueOf(u.getKey()));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        };*/
-
         for (int i = 0; i < chatUsers.size(); i++) {
-            Log.d("CHATUSERS", chatUsers.get(i).getId()+"");
             db.child("chats").child(String.valueOf(new_chat_id)).child("users").child(String.valueOf(i)).child("id").setValue(chatUsers.get(i).getId());
-            /*Query q = db.child("users").orderByChild("name").equalTo(chatUsers.get(i));
-            q.addValueEventListener(chatToUserListener);*/
         }
         db.child("system").child("lastChatID").setValue(new_chat_id);
 
