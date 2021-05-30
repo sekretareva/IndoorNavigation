@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -109,6 +110,15 @@ public class ChatsActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {}
         };
         usersRef.addValueEventListener(userListener);
+    }
+
+    public void onHome(View v){
+        Intent i = new Intent(ChatsActivity.this, MapActivity.class);
+        startActivity(i);
+    }
+
+    public void onBack(View v){
+        this.finish();
     }
 
     public void onChooseUsersForChat(View v){

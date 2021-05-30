@@ -7,11 +7,14 @@
     tools:context=".ChatsActivity"
     android:orientation="vertical">
 
+    <include layout="@layout/chatstoolbar"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Создать чат"
-        android:onClick="onChooseUsersForChat">
+        android:onClick="onChooseUsersForChat"
+        android:background="@drawable/button">
 
     </Button>
 

@@ -6,6 +6,8 @@
     tools:context=".CreateChatActivity"
     android:orientation="vertical">
 
+    <include layout="@layout/chatstoolbar"/>
+
     <EditText
         android:id="@+id/searchUser"
         android:layout_width="match_parent"
@@ -23,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@drawable/button"
         android:onClick="onCreateChat"
         android:text="Создать">
     </Button>

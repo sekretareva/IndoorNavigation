@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/maptoolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/toolbar"
+    android:orientation="horizontal">
+
+    <ImageButton
+        android:id="@+id/chats"
+        style="@android:style/Holo.ButtonBar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/chats"
+        android:scaleType="fitEnd"
+        app:layout_constraintEnd_toStartOf="@+id/icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="onChat"/>
+
+    <ImageButton
+        android:id="@+id/icon"
+        style="@android:style/Holo.ButtonBar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="fitEnd"
+        android:onClick="onIconClick"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

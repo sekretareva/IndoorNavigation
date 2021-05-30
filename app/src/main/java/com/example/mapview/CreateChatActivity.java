@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -77,6 +78,15 @@ public class CreateChatActivity extends AppCompatActivity {
                 listView.setAdapter(adapter);
             }
         });
+    }
+
+    public void onHome(View v){
+        Intent i = new Intent(CreateChatActivity.this, MapActivity.class);
+        startActivity(i);
+    }
+
+    public void onBack(View v){
+        this.finish();
     }
 
     public void onCreateChat(View v){

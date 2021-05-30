@@ -41,20 +41,23 @@
 
             <ImageView
                 android:id="@+id/icon1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:scaleType="fitCenter"
                 android:onClick="onIconClick"
                 android:layout_weight="1"/>
             <ImageView
                 android:id="@+id/icon2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:scaleType="fitCenter"
                 android:onClick="onIconClick"
                 android:layout_weight="1"/>
             <ImageView
                 android:id="@+id/icon3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:scaleType="fitCenter"
                 android:onClick="onIconClick"
                 android:layout_weight="1"/>
 
@@ -102,19 +105,22 @@
 
         <Button
             android:id="@+id/signUp"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:onClick="onSaved"
             android:text="Сохранить"
-            >
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button">
 
         </Button>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:onClick="onCanceled"
-            android:text="Отмена">
+            android:text="Отмена"
+            android:background="@drawable/button">
 
         </Button>
     </LinearLayout>

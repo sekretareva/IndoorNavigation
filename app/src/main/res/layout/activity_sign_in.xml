@@ -52,6 +52,7 @@
         android:layout_marginTop="20dp"
         android:onClick="onSignIn"
         android:text="Войти"
+        android:background="@drawable/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password">
@@ -64,6 +65,7 @@
         android:layout_marginTop="20dp"
         android:onClick="onNotHaveAccount"
         android:text="У меня нет аккаунта!"
+        android:background="@drawable/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button">

@@ -135,13 +135,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                 //если данные не пусты, т.е. если клик был совершен на слое
                 if (onRoomClick>=0){
+                    for (Layer room: rooms)
+                        room.setProperties(PropertyFactory.fillOpacity(0.0f));
                     rooms.add(style.getLayer(mapData.roomsNames[onRoomClick]));
-                    tv.setText(mapData.roomsNames[onRoomClick]);
+                    tv.setText(mapData.description[onRoomClick]);
 
                     //выделяем слой с кабинетом и делаем надпись
                     Layer room = rooms.getLast();
                     room.setProperties(PropertyFactory.fillOpacity(0.5f));
-                    //заупскаем asuncTask на 3 секунды, после которых надпись и подсветка исчезнут
+                    //запускаем asyncTask на 3 секунды, после которых надпись и подсветка исчезнут
                     Task t = new Task();
                     t.execute();
                 }
@@ -199,7 +201,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -212,7 +214,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Layer room = rooms.getFirst();
             room.setProperties(PropertyFactory.fillOpacity(0.0f));
             rooms.removeFirst();
-            tv.setText("");
+            if (rooms.isEmpty())
+                tv.setText("");
         }
     }
 }

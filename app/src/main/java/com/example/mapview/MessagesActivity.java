@@ -28,7 +28,6 @@ public class MessagesActivity extends AppCompatActivity {
     int user_id;
     long lastMesID;
     String chat_id;
-    ImageView home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +35,6 @@ public class MessagesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_messages);
 
         listView = findViewById(R.id.msgsList);
-        home=findViewById(R.id.home);
-        home.setImageResource(R.drawable.home);
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MessagesActivity.this, MapActivity.class);
-                startActivity(i);
-            }
-        });
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("chats");
@@ -87,6 +77,15 @@ public class MessagesActivity extends AppCompatActivity {
 
         };
         myRef.addValueEventListener(msgListener);
+    }
+
+    public void onHome(View v){
+        Intent i = new Intent(MessagesActivity.this, MapActivity.class);
+        startActivity(i);
+    }
+
+    public void onBack(View v){
+        this.finish();
     }
 
     public void onSend(View v){

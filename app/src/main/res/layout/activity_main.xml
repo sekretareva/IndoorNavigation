@@ -43,20 +43,23 @@
 
             <ImageView
                 android:id="@+id/icon1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:scaleType="fitCenter"
                 android:onClick="onIconClick"
                 android:layout_weight="1"/>
             <ImageView
                 android:id="@+id/icon2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:scaleType="fitCenter"
                 android:onClick="onIconClick"
                 android:layout_weight="1"/>
             <ImageView
                 android:id="@+id/icon3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:scaleType="fitCenter"
                 android:onClick="onIconClick"
                 android:layout_weight="1"/>
 
@@ -105,6 +108,7 @@
         android:layout_marginTop="20dp"
         android:onClick="onSignUp"
         android:text="Зарегистрироваться"
+        android:background="@drawable/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password">
@@ -117,6 +121,7 @@
         android:onClick="onHaveAccount"
         android:layout_marginTop="20dp"
         android:text="У меня уже есть аккаунт!"
+        android:background="@drawable/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUp">

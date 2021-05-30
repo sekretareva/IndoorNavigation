@@ -61,6 +61,19 @@ public class BeaconData implements BeaconConsumer {
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, org.altbeacon.beacon.Region region) {
                 if (beacons.size() > 0) {
                     for (Beacon beacon: beacons){
+                        //Log.d("BEACON", beacon.getDistance()+" " + beacon.getBluetoothAddress());
+                        /*double A=0, B=0, C=0;
+                        if (beacon.getBluetoothAddress().equals("EE:AB:4C:2E:B6:88")){
+                            A = 1.2942; B = 7.3187; C = -0.638859079;}
+                        else{
+                            if (beacon.getBluetoothAddress().equals("E1:33:21:16:75:06"))
+                                A = 1.316; B = 6.67222; C = -1.2260755;}
+
+                        double distance = A * Math.pow((double)beacon.getRssi()/(double)beacon.getTxPower(),B) + C;
+
+                        Log.d("DIST", (double)beacon.getRssi() + " " + (double)beacon.getTxPower());
+                        Log.d("DIST", beacon.getBluetoothAddress() + " " + distance);*/
+
                        if (Arrays.asList(beaconsNames).contains(beacon.getBluetoothName()) && beacon.getRssi()>-100){
                            ArrayList<Double> beaconDist = new ArrayList<>();
                            if (beaconsDist.containsKey(beacon.getBluetoothName())){
@@ -71,6 +84,7 @@ public class BeaconData implements BeaconConsumer {
                            }
                            else {
                                beaconDist.add(beacon.getDistance());
+
                                beaconsDist.put(beacon.getBluetoothName(), beaconDist);
                            }
                            analizedBeacons.add(beacon);
