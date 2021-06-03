@@ -10,6 +10,10 @@
 
     <include layout="@layout/maptoolbar"/>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
@@ -29,6 +33,6 @@
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/room"/>
 
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

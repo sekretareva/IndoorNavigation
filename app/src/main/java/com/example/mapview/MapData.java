@@ -66,7 +66,7 @@ public class MapData {
         style.addLayer(new LineLayer("walls", "walls").withProperties(fillOpacity(1.0f)));
         style.addLayer(new LineLayer("stairs", "stairs").withProperties(PropertyFactory.lineColor(Color.BLACK),fillOpacity(1.0f)));
         for (String room: roomsNames) {
-            style.addLayer(new FillLayer(room, room).withProperties(PropertyFactory.fillColor(Color.BLUE),fillOpacity(0.0f)));
+            style.addLayer(new FillLayer(room, room).withProperties(PropertyFactory.fillColor(Color.parseColor("#FF6F48")),fillOpacity(0.0f)));
             style.addLayer(new SymbolLayer(room+"L", room+"L").withProperties(PropertyFactory.textColor(Color.BLACK),
                     textField(room),textSize(12f), textOpacity(0.7f)));
         }

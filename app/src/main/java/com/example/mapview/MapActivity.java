@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -139,6 +140,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         room.setProperties(PropertyFactory.fillOpacity(0.0f));
                     rooms.add(style.getLayer(mapData.roomsNames[onRoomClick]));
                     tv.setText(mapData.description[onRoomClick]);
+                    Log.d("onRoomClick", tv.getAlpha()+" " + tv.getTextColors());
 
                     //выделяем слой с кабинетом и делаем надпись
                     Layer room = rooms.getLast();
